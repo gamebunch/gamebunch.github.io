@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guess Logo Game</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+  }
+  #game-container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 600px;
+  }
+  #logo img {
+    width: 100%;
+    max-width: 300px;
+    margin: 20px auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  #guessForm input[type='text'] {
+    padding: 10px;
+    width: calc(100% - 22px);
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  #guessForm input[type='submit'] {
+    padding: 10px 20px;
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  #guessForm input[type='submit']:hover {
+    background-color: #4cae4c;
+  }
+  #score {
+    font-size: 1.2em;
+    margin: 20px 0;
+  }
+</style>
+</head>
+<body>
+  <div id="game-container">
+    <h1>Logos Game</h1>
+    <p id="score">Score: 0/10</p>
+    <div id="logo">
+      <!-- Logo will be displayed here -->
+    </div>
+    <form id="guessForm">
+      <input type="text" id="userGuess" placeholder="Enter your guess here" required>
+      <input type="submit" value="Submit Guess">
+    </form>
+  </div>
+  <script>
+    // Array of logos and answers
+    const logos = [
+    { src: 'https://media.discordapp.net/attachments/718169914136985662/1233195267495563384/11.png?ex=662c3617&is=662ae497&hm=79571705f00419691aca6afc99cf28b7122d06c6ddc86c56f67767c90c7b2d7f&', answer: 'Aldi' },
+    { src: 'https://media.discordapp.net/attachments/718169914136985662/1233195268799860777/12.png?ex=662c3617&is=662ae497&hm=4ef5a633b6de40799b5aee9818639f8a3426b902debeff99fea864ffea1f9e78&', answer: 'bp' },
+    { src: 'https://media.discordapp.net/attachments/718169914136985662/1233502399402868859/24.png?ex=662d5421&is=662c02a1&hm=3292fafd7ddb0c9c275862a85225ed1a6c10ce634b48f47ba0187ceaa26e8830&', answer: 'Vodafone' },
+    { src: 'https://media.discordapp.net/attachments/718169914136985662/1233195267185180743/87.png?ex=662c3617&is=662ae497&hm=9e72086d8acf9d3e5e75be39e98dd0fc936088e8f06370dbc7580f56b2c8072c&', answer: 'Cadbury' },
+    { src: 'https://media.discordapp.net/attachments/718169914136985662/1233502400912822344/72.png?ex=662d5421&is=662c02a1&hm=3e8110be74035e93a7ca099f5c401de9ff28aef25e98e9739d2ad5c8cce628cb&', answer: 'HSBC' },
+    { src: 'https://media.discordapp.net/attachments/718169914136985662/1233502402464972831/69.png?ex=662d5422&is=662c02a2&hm=d655ce4a7268c6524cc26d83c3f5d612b9b0491a9b901331fb5e2d9e80fe99ce&', answer: 'Virgin Media' },
+    { src: 'https://media.discordapp.net/attachments/718169914136985662/1233502402221445140/70.png?ex=662d5422&is=662c02a2&hm=97e1810cba29c77213cd3af18b63f0dc273779891fea77ccde3c2c442813cd0c&', answer: 'expedian' },
+    { src: 'https://media.discordapp.net/attachments/718169914136985662/1233502401969782856/39.png?ex=662d5421&is=662c02a1&hm=67420fb5a691bea4c7c4881bfbe7cf2b8302cfc2911ee49e2ef960e7f50ae2a7&', answer: 'British Gas' },
+    { src: 'https://media.discordapp.net/attachments/718169914136985662/1233502401340641290/27.png?ex=662d5421&is=662c02a1&hm=90ecd278d236033d69580fba559af7f8fe6545aecb7d4aa84f464fe1c792657b&', answer: 'Channel 4' },
+    // logos brrr skibidi
+];
+
+    // Function to shuffle an array
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    // Shuffle the logos array and select the first 10
+    shuffleArray(logos);
+    const selectedLogos = logos.slice(0, 10);
+
+    let currentLogoIndex = 0;
+    let score = 0;
+
+    function displayLogo() {
+      const logoImage = document.createElement('img');
+      logoImage.src = selectedLogos[currentLogoIndex].src;
+      logoImage.alt = 'Guess the logo';
+      document.getElementById('logo').innerHTML = '';
+      document.getElementById('logo').appendChild(logoImage);
+    }
+
+    function updateScore(correct) {
+      if (correct) {
+        score++;
+      }
+      document.getElementById('score').textContent = `Score: ${score}/10`;
+    }
+
+    function nextQuestion() {
+      currentLogoIndex++;
+      if (currentLogoIndex < selectedLogos.length) {
+        displayLogo();
+      } else {
+        alert(`Quiz complete! Your final score is ${score}/10.`);
+      }
+    }
+
+    document.getElementById('guessForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const userGuess = document.getElementById('userGuess').value;
+      const correctAnswer = selectedLogos[currentLogoIndex].answer.toLowerCase();
+      const correct = userGuess.toLowerCase() === correctAnswer;
+      updateScore(correct);
+      nextQuestion();
+      document.getElementById('userGuess').value = '';
+    });
+
+    // Initialize the game
+    displayLogo();
+  </script>
+</body>
+</html>
