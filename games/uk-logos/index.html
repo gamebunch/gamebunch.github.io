@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Guess Logo Game</title>
+<title>UK Logo Game | Gamebunch</title>
 <style>
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -58,14 +58,14 @@
 </head>
 <body>
   <div id="game-container">
-    <h1>Logos Game</h1><h2>Latest Update: 5 New Logos</h2><h4>Time: 26 Apr 10:02pm</h4>
+    <h1>Logos Game</h1><h2>Latest Update: Fix bug</h2><h4>Time: 26 Apr 9:01pm</h4>
     <p id="score">Score: 0/10</p>
     <div id="logo">
       <!-- Logo will be displayed here -->
     </div>
     <form id="guessForm">
       <input type="text" id="userGuess" placeholder="Enter your guess here" required>
-      <input type="submit" value="Submit Guess">
+      <input type="submit" value="Submit">
     </form>
   </div>
   <script>
@@ -123,7 +123,7 @@
       if (currentLogoIndex < selectedLogos.length) {
         displayLogo();
       } else {
-        alert(`Quiz complete! Your final score is ${score}/10.`);
+        alert(`Finished guessing! Your final score is ${score}/10.`);
       }
     }
 
